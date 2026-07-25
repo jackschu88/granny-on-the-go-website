@@ -59,37 +59,46 @@ export default function BookPageContent({ pageId, onNext }: Props) {
     case "meet-granny":
       return (
         <div className="book-copy flex h-full flex-col justify-center">
-          <div className="relative mx-auto mb-4 aspect-square w-full max-w-[120px] overflow-hidden rounded-full border-2 border-soft-gold/40 shadow-md">
+          <div className="relative mx-auto mb-3 aspect-square w-full max-w-[110px] overflow-hidden rounded-full border-2 border-soft-gold/40 shadow-md">
             <Image
               src="/images/book-cover.jpg"
               alt="Granny arriving with her adventure tote"
               fill
-              sizes="120px"
+              sizes="110px"
               className="object-cover object-[42%_28%]"
             />
           </div>
           <p className="mb-2 font-serif text-sm leading-relaxed text-charcoal/80 md:text-base">
-            Granny doesn&apos;t arrive with grand plans.
+            Every time Granny arrives, no one knows exactly where the day will lead.
           </p>
           <p className="mb-2 font-serif text-sm leading-relaxed text-charcoal/80 md:text-base">
-            She simply pulls into the driveway in her little black convertible,
-            wearing her favorite adventure hat and carrying her colorful tote.
+            That&apos;s part of the magic.
           </p>
           <p className="mb-2 font-serif text-sm leading-relaxed text-charcoal/80 md:text-base">
-            Inside are bubbles, chalk, books, jump ropes, popsicles, and little
-            surprises.
+            The best adventures aren&apos;t carefully planned.
           </p>
           <p className="mb-2 font-serif text-sm leading-relaxed text-charcoal/80 md:text-base">
-            But none of those are her greatest gift.
+            They&apos;re discovered together.
           </p>
           <p className="mb-2 font-serif text-sm leading-relaxed text-charcoal/80 md:text-base">
-            Her greatest gift is making every child feel noticed, capable, and
-            wonderfully important.
+            She arrives in her little black convertible, wearing her favorite
+            adventure hat and carrying her colorful tote.
+          </p>
+          <p className="mb-2 font-serif text-sm leading-relaxed text-charcoal/80 md:text-base">
+            Inside are bubbles, sidewalk chalk, books, jump ropes, popsicles, and
+            little surprises.
+          </p>
+          <p className="mb-2 font-serif text-sm leading-relaxed text-charcoal/80 md:text-base">
+            But those aren&apos;t what children remember most.
+          </p>
+          <p className="mb-2 font-serif text-sm leading-relaxed text-charcoal/80 md:text-base">
+            They remember the way Granny made an ordinary afternoon feel like the
+            greatest adventure in the world.
           </p>
           <p className="mb-1 font-serif text-sm leading-relaxed text-charcoal/80 md:text-base">
             Because Granny doesn&apos;t just see children.
           </p>
-          <p className="mb-4 font-serif text-base font-semibold italic text-deep-burgundy md:text-lg">
+          <p className="mb-3 font-serif text-base font-semibold italic text-deep-burgundy md:text-lg">
             She sees who they are becoming.
           </p>
           <div className="flex flex-wrap gap-2">
