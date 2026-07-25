@@ -18,14 +18,11 @@ export type PreorderProduct = {
 /** Standard pre-order — live */
 export const STANDARD_SLUG = "rsmfcb";
 
-/**
- * Signed-copy slug — paste when ready, or set env NEXT_PUBLIC_GUMROAD_SIGNED_SLUG.
- * Leave empty until provided; button stays visible but disabled until set.
- */
+/** Signed-copy pre-order — live (override with NEXT_PUBLIC_GUMROAD_SIGNED_SLUG if needed) */
 export const SIGNED_SLUG =
   (typeof process !== "undefined" &&
     process.env.NEXT_PUBLIC_GUMROAD_SIGNED_SLUG?.trim()) ||
-  "";
+  "wizffl";
 
 export function gumroadUrl(slug: string): string {
   return `${GUMROAD_BASE}/${slug}`;
