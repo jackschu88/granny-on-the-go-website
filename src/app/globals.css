@@ -1,26 +1,492 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Sampled from the house-arrival cover art */
+  --color-cream: #f7f1e6;
+  --color-warm-beige: #e8dcc8;
+  --color-terracotta: #c17f59;
+  --color-deep-burgundy: #8b2e2e;
+  --color-soft-gold: #d4a76a;
+  --color-forest-green: #5a7a4a;
+  --color-sky-blue: #9ec5dc;
+  --color-charcoal: #2c2c2c;
+  --color-warm-white: #fefcf8;
+  --color-adventure: #e8634f;
+  --color-granny-hat: #c41e3a;
+  --font-serif: var(--font-fraunces), "Georgia", "Times New Roman", serif;
+  --font-sans: var(--font-source-sans), "Segoe UI", system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-cream, #f7f1e6);
+    color: var(--color-charcoal, #2c2c2c);
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-terracotta, #c17f59);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .skip-link {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .skip-link:focus {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 60;
+    width: auto;
+    height: auto;
+    padding: 0.5rem 1rem;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    background-color: var(--color-terracotta, #c17f59);
+    color: white;
+    border-radius: 0.375rem;
+    outline: none;
+  }
+
+  .story-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1.5rem;
+    position: relative;
+  }
+
+  @media (min-width: 768px) {
+    .story-section {
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .story-section {
+      padding-left: 6rem;
+      padding-right: 6rem;
+    }
+  }
+
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: 2.25rem;
+    color: var(--color-deep-burgundy, #8b2e2e);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 768px) {
+    .section-title {
+      font-size: 3rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .section-title {
+      font-size: 3.75rem;
+    }
+  }
+
+  .section-subtitle {
+    font-size: 1.125rem;
+    color: var(--color-terracotta, #c17f59);
+    text-align: center;
+    margin-bottom: 2rem;
+    max-width: 42rem;
+  }
+
+  @media (min-width: 768px) {
+    .section-subtitle {
+      font-size: 1.25rem;
+    }
+  }
+
+  .watercolor-bg {
+    position: relative;
+  }
+
+  .watercolor-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle at 20% 50%, #c17f59 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, #d4a76a 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, #9ec5dc 0%, transparent 50%),
+      radial-gradient(circle at 70% 70%, #5a7a4a 0%, transparent 45%);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    background-color: var(--color-terracotta, #c17f59);
+    color: white;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-deep-burgundy, #8b2e2e);
+  }
+
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--color-terracotta, #c17f59);
+    outline-offset: 3px;
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    border: 2px solid var(--color-terracotta, #c17f59);
+    color: var(--color-terracotta, #c17f59);
+    border-radius: 9999px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--color-terracotta, #c17f59);
+    color: white;
+  }
+
+  .btn-secondary:focus-visible {
+    outline: 2px solid var(--color-terracotta, #c17f59);
+    outline-offset: 3px;
+  }
+
+  .card {
+    background-color: rgba(254, 252, 248, 0.88);
+    backdrop-filter: blur(4px);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.08),
+      0 4px 6px -4px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(232, 220, 200, 0.7);
+  }
+
+  /* Open-book page content */
+  .book-copy {
+    font-size: 1rem;
+  }
+
+  .book-form-page {
+    padding-bottom: 0.5rem;
+  }
+
+  .book-stage {
+    perspective: 1400px;
+  }
 }
+
+/* Ambient floaters — subtle butterflies / leaves / balloons */
+@keyframes ambient-rise {
+  0% {
+    transform: translate3d(0, 110vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(var(--drift, 20px), -15vh, 0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.ambient-floater {
+  position: absolute;
+  bottom: -5%;
+  animation-name: ambient-rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+/* Circling bees & butterflies */
+.ambient-orbit {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.ambient-orbit-spin {
+  position: absolute;
+  inset: 0;
+  animation-name: ambient-orbit-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.ambient-orbit-reverse {
+  animation-direction: reverse;
+}
+
+@keyframes ambient-orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ambient-trail-arm {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+.ambient-trail-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  border-radius: 9999px;
+  box-shadow: 0 0 6px rgba(255, 248, 220, 0.55);
+}
+
+.ambient-trail-dot--bee {
+  background: radial-gradient(
+    circle,
+    rgba(255, 220, 100, 0.95) 0%,
+    rgba(232, 184, 74, 0.55) 45%,
+    transparent 75%
+  );
+}
+
+.ambient-trail-dot--butterfly {
+  background: radial-gradient(
+    circle,
+    rgba(255, 240, 230, 0.95) 0%,
+    rgba(232, 160, 144, 0.5) 45%,
+    transparent 75%
+  );
+}
+
+.ambient-creature {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+}
+
+.ambient-creature-face {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Same period as orbit, opposite direction → stays upright */
+  animation-name: ambient-orbit-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: reverse;
+  will-change: transform;
+  filter: drop-shadow(0 1px 2px rgba(80, 50, 30, 0.18));
+}
+
+.ambient-orbit-spin.ambient-orbit-reverse .ambient-creature-face {
+  animation-direction: normal;
+}
+
+/* Soft wing flap */
+.ambient-wing {
+  transform-origin: center center;
+  animation: ambient-wing-flap 0.28s ease-in-out infinite;
+}
+
+.ambient-wing-l {
+  transform-origin: 70% 50%;
+}
+
+.ambient-wing-r {
+  transform-origin: 30% 50%;
+  animation-delay: 0.04s;
+}
+
+@keyframes ambient-wing-flap {
+  0%,
+  100% {
+    transform: scaleY(1) scaleX(1);
+  }
+  50% {
+    transform: scaleY(0.72) scaleX(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-floater,
+  .ambient-orbit,
+  .ambient-orbit-spin,
+  .ambient-creature-face,
+  .ambient-wing {
+    animation: none !important;
+  }
+
+  .ambient-floater,
+  .ambient-orbit {
+    display: none;
+  }
+}
+
+/* Full-screen adventure world behind the book */
+@keyframes world-bg-breathe {
+  0%,
+  100% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.1) translate3d(-0.6%, -0.4%, 0);
+  }
+}
+
+.world-bg-breathe {
+  animation: world-bg-breathe 28s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes world-light-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate3d(8%, 4%, 0);
+    opacity: 0.55;
+  }
+}
+
+.world-light-drift {
+  animation: world-light-drift 18s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes world-bubble-rise {
+  0% {
+    transform: translate3d(0, 110vh, 0) scale(0.6);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(var(--drift, 20px), -12vh, 0) scale(1.15);
+    opacity: 0;
+  }
+}
+
+.world-bubble {
+  bottom: -4%;
+  animation-name: world-bubble-rise;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes world-spark-twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  40% {
+    opacity: 0.85;
+    transform: scale(1.2);
+  }
+  70% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+}
+
+.world-spark {
+  animation-name: world-spark-twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world-bg-breathe,
+  .world-light-drift,
+  .world-bubble,
+  .world-spark {
+    animation: none !important;
+  }
+
+  .world-bubble,
+  .world-spark {
+    display: none;
+  }
+}
+

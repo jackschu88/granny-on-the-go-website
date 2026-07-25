@@ -1,0 +1,185 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { BOOK_PAGES } from "@/lib/book-pages";
+import BookPageContent from "@/components/book/BookPageContent";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
+
+type Props = {
+  pageIndex: number;
+  direction: "next" | "prev" | "none";
+  turning: boolean;
+  onTurnComplete: () => void;
+  onEdgePrev: () => void;
+  onEdgeNext: () => void;
+  onNextPage?: () => void;
+};
+
+/**
+ * Large open landscape spread (desktop) / portrait page (mobile).
+ * Sized to match the cover stage so open doesn't feel like a shrink.
+ */
+export default function OpenBook({
+  pageIndex,
+  direction,
+  turning,
+  onTurnComplete,
+  onEdgePrev,
+  onEdgeNext,
+  onNextPage,
+}: Props) {
+  const spreadRef = useRef<HTMLDivElement>(null);
+  const page = BOOK_PAGES[pageIndex];
+
+  useEffect(() => {
+    const spread = spreadRef.current;
+    if (!spread) return;
+
+    if (prefersReducedMotion() || direction === "none") {
+      gsap.set(spread, {
+        clearProps: "transform,opacity",
+        autoAlpha: 1,
+        x: 0,
+        scale: 1,
+      });
+      if (turning) onTurnComplete();
+      return;
+    }
+
+    const fromX = direction === "next" ? 28 : -28;
+
+    const tl = gsap.timeline({
+      onComplete: () => onTurnComplete(),
+    });
+
+    gsap.set(spread, { transformOrigin: "50% 50%" });
+
+    tl.fromTo(
+      spread,
+      { autoAlpha: 0.8, x: fromX, scale: 0.992 },
+      { autoAlpha: 1, x: 0, scale: 1, duration: 0.42, ease: "power2.out" }
+    );
+
+    return () => {
+      tl.kill();
+    };
+  }, [pageIndex, direction, turning, onTurnComplete]);
+
+  return (
+    <div
+      className="relative mx-auto"
+      style={{
+        // Match closed cover: 9×7 landscape, as large as the window allows
+        width: "min(96vw, calc((100dvh - 8.5rem) * 9 / 7), 1400px)",
+        aspectRatio: "9 / 7",
+      }}
+    >
+      <button
+        type="button"
+        className="absolute left-0 top-0 z-30 hidden h-full w-[8%] cursor-w-resize bg-transparent md:block"
+        aria-label="Previous page"
+        onClick={onEdgePrev}
+      />
+      <button
+        type="button"
+        className="absolute right-0 top-0 z-30 hidden h-full w-[8%] cursor-e-resize bg-transparent md:block"
+        aria-label="Next page"
+        onClick={onEdgeNext}
+      />
+
+      <div
+        ref={spreadRef}
+        className="relative mx-auto h-full w-full overflow-hidden rounded-xl border border-warm-beige/90 md:rounded-2xl"
+        style={{
+          background: "#fefcf8",
+          boxShadow:
+            "0 24px 60px rgba(44,44,44,0.16), 0 8px 20px rgba(0,0,0,0.06)",
+        }}
+      >
+        {/* Desktop spread — fills 9×7 face */}
+        <div
+          className="hidden h-full md:grid md:grid-cols-2"
+          style={{
+            background:
+              "linear-gradient(90deg, #faf6ef 0%, #fefcf8 46%, #e8dcc8 49.5%, #d9cbb3 50%, #e8dcc8 50.5%, #fefcf8 54%, #faf6ef 100%)",
+          }}
+        >
+          <div className="relative flex flex-col justify-between px-8 py-8 lg:px-14 lg:py-12">
+            <div>
+              <p className="font-sans text-[10px] uppercase tracking-[0.32em] text-terracotta/75">
+                Granny on the Go
+              </p>
+              <h2 className="mt-3 font-serif text-3xl leading-tight text-deep-burgundy lg:text-5xl">
+                {page?.title}
+              </h2>
+              {page?.kicker && (
+                <p className="mt-3 max-w-sm font-serif text-base italic text-charcoal/50 lg:text-lg">
+                  {page.kicker}
+                </p>
+              )}
+            </div>
+            <div className="mt-8">
+              <div className="h-px w-16 bg-soft-gold/70" />
+              <p className="mt-4 font-sans text-xs text-charcoal/40 lg:text-sm">
+                Page {pageIndex + 1} of {BOOK_PAGES.length}
+              </p>
+              <p className="mt-6 font-serif text-sm leading-relaxed text-charcoal/45 lg:text-base">
+                {pageIndex === 0
+                  ? "Turn the page and step into Granny's world."
+                  : "Turn the page to continue the adventure."}
+              </p>
+            </div>
+            <div
+              className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-black/[0.05] to-transparent"
+              aria-hidden
+            />
+          </div>
+
+          <div className="relative flex flex-col px-8 py-8 lg:px-14 lg:py-12">
+            <div className="relative min-h-0 flex-1 overflow-y-auto">
+              {page && (
+                <BookPageContent pageId={page.id} onNext={onNextPage} />
+              )}
+            </div>
+            <div
+              className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-black/[0.05] to-transparent"
+              aria-hidden
+            />
+          </div>
+        </div>
+
+        {/* Mobile: same 9×7 shell, stacked content */}
+        <div
+          className="flex h-full flex-col md:hidden"
+          style={{
+            background:
+              "linear-gradient(90deg, #e8dcc8 0%, #f7f1e6 10px, #fefcf8 18px, #fefcf8 100%)",
+          }}
+        >
+          <header className="border-b border-warm-beige/70 px-5 pb-3 pt-5">
+            <p className="font-sans text-[10px] uppercase tracking-[0.3em] text-terracotta/80">
+              Granny on the Go
+            </p>
+            <div className="mt-1 flex items-start justify-between gap-2">
+              <div>
+                <h2 className="font-serif text-2xl text-deep-burgundy">{page?.title}</h2>
+                {page?.kicker && (
+                  <p className="mt-0.5 font-serif text-sm italic text-charcoal/50">
+                    {page.kicker}
+                  </p>
+                )}
+              </div>
+              <p className="shrink-0 pt-1 font-sans text-xs text-charcoal/35">
+                {pageIndex + 1}/{BOOK_PAGES.length}
+              </p>
+            </div>
+          </header>
+          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
+            {page && <BookPageContent pageId={page.id} onNext={onNextPage} />}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
