@@ -6,7 +6,9 @@ import BookCoverIntro from "@/components/book/BookCoverIntro";
 import OpenBook from "@/components/book/OpenBook";
 import BookControls from "@/components/book/BookControls";
 import AmbientLayer from "@/components/book/AmbientLayer";
-import AmbientSound from "@/components/book/AmbientSound";
+import AmbientSound, {
+  START_MUSIC_EVENT,
+} from "@/components/book/AmbientSound";
 import WorldBackground from "@/components/book/WorldBackground";
 
 type Phase = "cover" | "reading";
@@ -25,6 +27,8 @@ export default function BookExperience() {
   const touchStartX = useRef<number | null>(null);
 
   const openBook = useCallback(() => {
+    // Fire inside the user gesture so the browser allows audio
+    window.dispatchEvent(new Event(START_MUSIC_EVENT));
     setPhase("reading");
     setPageIndex(0);
     setDirection("none");
