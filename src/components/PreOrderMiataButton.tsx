@@ -5,29 +5,29 @@ import Image from "next/image";
 import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
-/** Hardcoded so a blank Vercel env can never produce an empty / about:blank href. */
+/**
+ * Fixed product URL. Do not read from env for the open action —
+ * an empty NEXT_PUBLIC_* on Vercel must never produce a blank href.
+ */
 export const GUMROAD_PREORDER_URL =
-  process.env.NEXT_PUBLIC_GUMROAD_URL?.trim() ||
   "https://theveilpress.gumroad.com/l/rsmfcb";
 
 type Props = {
-  href?: string;
   className?: string;
 };
 
 /**
  * Square Miata preorder control.
- * Opens Gumroad with the real product URL only — never about:blank,
- * never navigates the current window.
+ *
+ * Uses a real HTML form with action=Gumroad + target=_blank.
+ * That is the only reliable way browsers open an external checkout
+ * without about:blank or hijacking the current tab.
+ * Animation is purely decorative (never preventDefault / window.open).
  */
-export default function PreOrderMiataButton({
-  href = GUMROAD_PREORDER_URL,
-  className = "",
-}: Props) {
+export default function PreOrderMiataButton({ className = "" }: Props) {
   const carRef = useRef<HTMLDivElement>(null);
   const dustRef = useRef<HTMLDivElement>(null);
-  const [busy, setBusy] = useState(false);
-  const [blocked, setBlocked] = useState(false);
+  const [animating, setAnimating] = useState(false);
 
   const resetCar = useCallback(() => {
     if (carRef.current) {
@@ -36,12 +36,15 @@ export default function PreOrderMiataButton({
     if (dustRef.current) {
       gsap.set(dustRef.current, { clearProps: "all" });
     }
-    setBusy(false);
+    setAnimating(false);
   }, []);
 
   const playDriveOff = useCallback(() => {
+    if (animating) return;
+    setAnimating(true);
+
     if (prefersReducedMotion() || !carRef.current) {
-      window.setTimeout(resetCar, 350);
+      window.setTimeout(resetCar, 400);
       return;
     }
 
@@ -90,107 +93,86 @@ export default function PreOrderMiataButton({
         "-=0.15"
       );
     }
-  }, [resetCar]);
-
-  const openCheckout = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (busy) return;
-      setBusy(true);
-      setBlocked(false);
-
-      // Real product URL only — never about:blank, never location.assign.
-      const tab = window.open(href, "_blank", "noopener,noreferrer");
-
-      if (!tab) {
-        // Popup blocked: stay on this site; show a normal link to click.
-        setBlocked(true);
-        setBusy(false);
-        return;
-      }
-
-      playDriveOff();
-    },
-    [busy, href, playDriveOff]
-  );
+  }, [animating, resetCar]);
 
   return (
     <div className={`flex w-full flex-col items-center ${className}`}>
-      <button
-        type="button"
-        onClick={openCheckout}
-        disabled={busy}
-        className="group relative mx-auto block aspect-square w-full max-w-[220px] overflow-hidden rounded-2xl border-2 border-soft-gold/50 bg-cream shadow-md transition focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2 disabled:cursor-wait"
-        style={{
-          boxShadow:
-            "0 12px 28px rgba(44,44,44,0.12), 0 4px 10px rgba(0,0,0,0.06)",
-        }}
-        aria-label="Preorder the Adventure — opens Gumroad in a new tab"
+      {/*
+        Native form navigation → new tab.
+        No window.open, no about:blank, no location.assign on this window.
+      */}
+      <form
+        action={GUMROAD_PREORDER_URL}
+        method="get"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-full max-w-[220px]"
+        onSubmit={playDriveOff}
       >
-        <span
-          className="absolute inset-0"
+        <button
+          type="submit"
+          className="group relative mx-auto block aspect-square w-full overflow-hidden rounded-2xl border-2 border-soft-gold/50 bg-cream shadow-md transition focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
           style={{
-            background:
-              "linear-gradient(180deg, #f7f0e4 0%, #efe4d0 55%, #e8dcc8 100%)",
+            boxShadow:
+              "0 12px 28px rgba(44,44,44,0.12), 0 4px 10px rgba(0,0,0,0.06)",
           }}
-          aria-hidden
-        />
-
-        <div ref={carRef} className="absolute inset-0 will-change-transform">
-          <Image
-            src="/images/miata-preorder.jpg"
-            alt="Granny's little black convertible"
-            fill
-            sizes="220px"
-            className="object-cover object-center transition duration-300 group-hover:scale-[1.03] group-hover:brightness-[1.03]"
-            priority={false}
+          aria-label="Preorder the Adventure — opens Gumroad checkout in a new tab"
+        >
+          <span
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, #f7f0e4 0%, #efe4d0 55%, #e8dcc8 100%)",
+            }}
+            aria-hidden
           />
-        </div>
 
-        <div
-          ref={dustRef}
-          className="pointer-events-none absolute bottom-[18%] left-[12%] h-10 w-16 rounded-full opacity-0"
-          style={{
-            background:
-              "radial-gradient(ellipse, rgba(200,180,150,0.65) 0%, transparent 70%)",
-            filter: "blur(2px)",
-          }}
-          aria-hidden
-        />
+          <div ref={carRef} className="absolute inset-0 will-change-transform">
+            <Image
+              src="/images/miata-preorder.jpg"
+              alt="Granny's little black convertible"
+              fill
+              sizes="220px"
+              className="pointer-events-none object-cover object-center transition duration-300 group-hover:scale-[1.03] group-hover:brightness-[1.03]"
+            />
+          </div>
 
-        <span
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-black/55 via-black/25 to-transparent"
-          aria-hidden
-        />
+          <div
+            ref={dustRef}
+            className="pointer-events-none absolute bottom-[18%] left-[12%] h-10 w-16 rounded-full opacity-0"
+            style={{
+              background:
+                "radial-gradient(ellipse, rgba(200,180,150,0.65) 0%, transparent 70%)",
+              filter: "blur(2px)",
+            }}
+            aria-hidden
+          />
 
-        <span className="absolute inset-x-0 bottom-0 z-10 px-3 pb-3.5 pt-6 text-center">
-          <span className="block font-serif text-lg font-semibold leading-tight text-warm-white drop-shadow-sm md:text-xl">
-            Preorder the Adventure
+          <span
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-black/55 via-black/25 to-transparent"
+            aria-hidden
+          />
+
+          <span className="absolute inset-x-0 bottom-0 z-10 px-3 pb-3.5 pt-6 text-center">
+            <span className="block font-serif text-lg font-semibold leading-tight text-warm-white drop-shadow-sm md:text-xl">
+              Preorder the Adventure
+            </span>
+            <span className="mt-0.5 block font-sans text-[10px] uppercase tracking-[0.18em] text-warm-white/80">
+              {animating ? "Vroom…" : "Gumroad · $15.99"}
+            </span>
           </span>
-          <span className="mt-0.5 block font-sans text-[10px] uppercase tracking-[0.18em] text-warm-white/80">
-            {busy ? "Vroom…" : "Opens Gumroad"}
-          </span>
-        </span>
-      </button>
+        </button>
+      </form>
 
-      {/* Always-available plain link — works even if popups are blocked */}
+      {/* Plain fallback — always works even if the form tab is blocked */}
       <a
-        href={href}
+        href={GUMROAD_PREORDER_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-3 font-sans text-sm text-terracotta underline-offset-2 hover:underline"
       >
         Open Gumroad checkout →
       </a>
-
-      {blocked && (
-        <p className="mt-2 max-w-xs font-sans text-xs text-adventure" role="status">
-          Your browser blocked the new tab. Use the link above (or allow popups for
-          this site).
-        </p>
-      )}
     </div>
   );
 }
