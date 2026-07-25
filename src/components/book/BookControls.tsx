@@ -26,11 +26,11 @@ export default function BookControls({
         <button
           type="button"
           onClick={onPrev}
-          disabled={isFirst || turning}
-          className="rounded-full border border-warm-beige bg-warm-white/95 px-4 py-2 font-sans text-sm text-deep-burgundy shadow-sm transition hover:bg-warm-beige/40 disabled:cursor-not-allowed disabled:opacity-35"
-          aria-label="Previous page"
+          disabled={turning}
+          className="rounded-full border border-warm-beige bg-warm-white/95 px-4 py-2 font-sans text-sm text-deep-burgundy shadow-sm transition hover:bg-warm-beige/40 disabled:cursor-wait disabled:opacity-60"
+          aria-label={isFirst ? "Close book and return to cover" : "Previous page"}
         >
-          ← Previous
+          {isFirst ? "← Cover" : "← Previous"}
         </button>
 
         <button
@@ -38,7 +38,7 @@ export default function BookControls({
           onClick={onNext}
           disabled={isLast || turning}
           className="btn-primary px-5 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-35"
-          aria-label="Next page"
+          aria-label={isLast ? "End of book" : "Next page"}
         >
           {isLast ? "The End" : "Turn the Page →"}
         </button>
@@ -58,7 +58,7 @@ export default function BookControls({
             aria-label={`Go to ${p.title}`}
             disabled={turning}
             onClick={() => onGoTo(i)}
-            className={`h-2 rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta ${
+            className={`h-2 rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta disabled:cursor-wait ${
               i === pageIndex
                 ? "w-5 bg-terracotta"
                 : "w-2 bg-charcoal/20 hover:bg-charcoal/40"

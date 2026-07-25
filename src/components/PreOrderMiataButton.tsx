@@ -15,7 +15,8 @@ type Props = {
 };
 
 /**
- * Square Miata image button — animates drive-off, then opens Gumroad pre-order.
+ * Square Miata link button — real Gumroad URL in a new tab (no about:blank).
+ * Drive-off animation plays as the checkout tab opens.
  */
 export default function PreOrderMiataButton({
   href = gumroadUrl,
@@ -35,42 +36,23 @@ export default function PreOrderMiataButton({
     setBusy(false);
   }, []);
 
-  const finishCheckout = useCallback(
-    (tab: Window | null) => {
-      if (tab && !tab.closed) {
-        try {
-          tab.location.href = href;
-        } catch {
-          window.open(href, "_blank", "noopener,noreferrer");
-        }
-      } else {
-        // Popup blocked — same-tab fallback so checkout still works
-        window.location.assign(href);
-      }
-      window.setTimeout(resetCar, 250);
-    },
-    [href, resetCar]
-  );
-
-  const playAndGo = useCallback(() => {
+  const playDriveOff = useCallback(() => {
     if (busy) return;
     setBusy(true);
 
-    // Open during the user gesture so popup blockers allow it
-    const tab = window.open("about:blank", "_blank");
-
     if (prefersReducedMotion() || !carRef.current) {
-      finishCheckout(tab);
+      window.setTimeout(resetCar, 400);
       return;
     }
 
     const car = carRef.current;
     const dust = dustRef.current;
     const tl = gsap.timeline({
-      onComplete: () => finishCheckout(tab),
+      onComplete: () => {
+        window.setTimeout(resetCar, 300);
+      },
     });
 
-    // Soft rev / bounce, then drive right off the tile
     tl.fromTo(
       car,
       { x: 0, y: 0, scale: 1, rotate: 0 },
@@ -108,19 +90,20 @@ export default function PreOrderMiataButton({
         "-=0.15"
       );
     }
-  }, [busy, finishCheckout]);
+  }, [busy, resetCar]);
 
   return (
-    <button
-      type="button"
-      onClick={playAndGo}
-      disabled={busy}
-      className={`group relative mx-auto block aspect-square w-full max-w-[220px] overflow-hidden rounded-2xl border-2 border-soft-gold/50 bg-cream shadow-md transition focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2 disabled:cursor-wait ${className}`}
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={playDriveOff}
+      className={`group relative mx-auto block aspect-square w-full max-w-[220px] overflow-hidden rounded-2xl border-2 border-soft-gold/50 bg-cream shadow-md transition focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2 ${className}`}
       style={{
         boxShadow:
           "0 12px 28px rgba(44,44,44,0.12), 0 4px 10px rgba(0,0,0,0.06)",
       }}
-      aria-label="Preorder the Adventure — opens Gumroad checkout"
+      aria-label="Preorder the Adventure — opens Gumroad checkout in a new tab"
     >
       <span
         className="absolute inset-0"
@@ -162,9 +145,9 @@ export default function PreOrderMiataButton({
           Preorder the Adventure
         </span>
         <span className="mt-0.5 block font-sans text-[10px] uppercase tracking-[0.18em] text-warm-white/80">
-          {busy ? "Vroom…" : "Tap to go"}
+          {busy ? "Vroom…" : "Opens Gumroad"}
         </span>
       </span>
-    </button>
+    </a>
   );
 }

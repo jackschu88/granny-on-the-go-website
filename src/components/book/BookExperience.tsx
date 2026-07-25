@@ -32,6 +32,13 @@ export default function BookExperience() {
     setSoundUnlock((n) => n + 1);
   }, []);
 
+  const closeBook = useCallback(() => {
+    setPhase("cover");
+    setPageIndex(0);
+    setDirection("none");
+    setTurning(false);
+  }, []);
+
   const goTo = useCallback(
     (index: number, dir: Direction) => {
       if (turning) return;
@@ -42,10 +49,11 @@ export default function BookExperience() {
       setDirection(dir);
       setPageIndex(index);
 
+      // Safety unlock — OpenBook also calls onTurnComplete (~0.4s)
       window.setTimeout(() => {
         setTurning(false);
         setDirection("none");
-      }, 1200);
+      }, 500);
     },
     [pageIndex, turning]
   );
@@ -55,10 +63,14 @@ export default function BookExperience() {
     goTo(pageIndex + 1, "next");
   }, [goTo, pageIndex]);
 
+  /** Previous page, or close the book when on the first page */
   const prev = useCallback(() => {
-    if (pageIndex <= 0) return;
+    if (pageIndex <= 0) {
+      closeBook();
+      return;
+    }
     goTo(pageIndex - 1, "prev");
-  }, [goTo, pageIndex]);
+  }, [closeBook, goTo, pageIndex]);
 
   const onTurnComplete = useCallback(() => {
     setTurning(false);
