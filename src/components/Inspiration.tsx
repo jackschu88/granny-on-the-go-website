@@ -34,9 +34,9 @@ export default function Inspiration() {
             </div>
 
             <div className="flex-1">
-              <h3 className="mb-3 font-serif text-2xl text-deep-burgundy">Edie Denzel</h3>
+              <h3 className="mb-3 font-serif text-2xl text-deep-burgundy">Edie</h3>
               <p className="mb-4 font-serif text-lg leading-relaxed text-charcoal/80 md:text-xl">
-                The character of Granny is inspired by Edie Denzel — a beloved babysitter who
+                The character of Granny is inspired by Edie — a beloved babysitter who
                 encouraged children through curiosity, kindness, and adventure.
               </p>
               <p className="font-serif text-lg leading-relaxed text-charcoal/80 md:text-xl">
