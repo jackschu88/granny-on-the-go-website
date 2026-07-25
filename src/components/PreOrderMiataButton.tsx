@@ -21,8 +21,8 @@ type Props = {
  *
  * Uses a real HTML form with action=Gumroad + target=_blank.
  * That is the only reliable way browsers open an external checkout
- * without about:blank or hijacking the current tab.
- * Animation is purely decorative (never preventDefault / window.open).
+ * without blank tabs or hijacking the current tab.
+ * Animation is purely decorative (never blocks form submit).
  */
 export default function PreOrderMiataButton({ className = "" }: Props) {
   const carRef = useRef<HTMLDivElement>(null);
@@ -97,10 +97,7 @@ export default function PreOrderMiataButton({ className = "" }: Props) {
 
   return (
     <div className={`flex w-full flex-col items-center ${className}`}>
-      {/*
-        Native form navigation → new tab.
-        No window.open, no about:blank, no location.assign on this window.
-      */}
+      {/* Native form → new tab (no JS navigation). */}
       <form
         action={GUMROAD_PREORDER_URL}
         method="get"
