@@ -26,10 +26,11 @@ export const notifySchema = z.object({
 
 export type NotifyFormData = z.infer<typeof notifySchema>;
 
-/** Commerce links — Gumroad pre-order is live; Amazon optional via env. */
+/** Commerce links — see also src/lib/gumroad.ts */
 export const commerceConfig = {
   amazonUrl: process.env.NEXT_PUBLIC_AMAZON_URL ?? "",
   gumroadUrl:
     process.env.NEXT_PUBLIC_GUMROAD_URL ||
     "https://theveilpress.gumroad.com/l/rsmfcb",
+  gumroadSignedSlug: process.env.NEXT_PUBLIC_GUMROAD_SIGNED_SLUG ?? "",
 } as const;

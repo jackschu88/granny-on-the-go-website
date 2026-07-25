@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import PreOrderMiataButton from "@/components/PreOrderMiataButton";
+import { PREORDER_PRODUCTS } from "@/lib/gumroad";
 
 const amazonUrl = process.env.NEXT_PUBLIC_AMAZON_URL ?? "";
 
@@ -62,20 +63,31 @@ export default function ComingSoon({ bookMode = false }: Props) {
         <p className="mb-2 font-serif text-xl text-charcoal/80 md:text-2xl">
           Pre-order Granny on the Go
         </p>
-        <p className="mx-auto mb-1 font-serif text-2xl font-semibold text-deep-burgundy">
-          $15.99
-        </p>
         <p className="mx-auto mb-4 max-w-md font-serif text-sm leading-relaxed text-charcoal/65 md:text-base">
           The first adventure is almost here. Reserve your copy and be among the first
           families to welcome Granny into your home.
         </p>
 
-        {/* Primary: square Miata preorder button */}
-        <div className="mb-5 flex flex-col items-center">
-          <PreOrderMiataButton />
-          <p className="mt-3 max-w-xs font-sans text-xs text-charcoal/45">
-            $15.99 · Secure checkout on Gumroad · Instant keepsake PDF
-          </p>
+        {/* Standard $15.99 + Signed $20.99 */}
+        <div className="mb-5 flex w-full flex-col items-stretch justify-center gap-5 sm:flex-row sm:items-start sm:gap-4">
+          <div className="flex flex-1 flex-col items-center">
+            <p className="mb-2 font-serif text-lg font-semibold text-deep-burgundy">
+              {PREORDER_PRODUCTS.standard.priceLabel}
+            </p>
+            <PreOrderMiataButton product={PREORDER_PRODUCTS.standard} />
+            <p className="mt-2 max-w-[12rem] text-center font-sans text-[11px] text-charcoal/45">
+              {PREORDER_PRODUCTS.standard.description}
+            </p>
+          </div>
+          <div className="flex flex-1 flex-col items-center">
+            <p className="mb-2 font-serif text-lg font-semibold text-deep-burgundy">
+              {PREORDER_PRODUCTS.signed.priceLabel}
+            </p>
+            <PreOrderMiataButton product={PREORDER_PRODUCTS.signed} />
+            <p className="mt-2 max-w-[12rem] text-center font-sans text-[11px] text-charcoal/45">
+              {PREORDER_PRODUCTS.signed.description}
+            </p>
+          </div>
         </div>
 
         {amazonUrl && (

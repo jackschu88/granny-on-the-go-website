@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     "adventure",
     "kids book",
     "picture book",
-    "Edie Denzel",
+    "Edie",
   ],
   authors: [{ name: "Haley Schumacher" }],
   creator: "Haley Schumacher",

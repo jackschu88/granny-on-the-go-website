@@ -172,7 +172,7 @@ export default function BookPageContent({ pageId, onNext }: Props) {
         <div className="book-copy flex h-full flex-col justify-center">
           <p className="mb-2 font-serif text-sm leading-relaxed text-charcoal/80 md:text-base">
             The character of Granny was lovingly inspired by{" "}
-            <span className="font-semibold text-deep-burgundy">Edie Denzel</span>, a
+            <span className="font-semibold text-deep-burgundy">Edie</span>, a
             remarkable babysitter whose kindness, creativity, and joyful spirit left a
             lasting impression on countless children—including my own.
           </p>
