@@ -228,6 +228,17 @@
     font-size: 1rem;
   }
 
+  /* Tighter mobile type so more of each page fits before scale-to-fit */
+  @media (max-width: 767px) {
+    .book-copy {
+      font-size: 0.9rem;
+    }
+
+    .book-copy p {
+      line-height: 1.4;
+    }
+  }
+
   .book-form-page {
     padding-bottom: 0.5rem;
   }
@@ -235,6 +246,68 @@
   .book-stage {
     perspective: 1400px;
   }
+
+  /*
+   * Book stage: parent owns free space.
+   * Mobile = full portrait paper page (height fills stage).
+   * Desktop = 9×7 landscape spread fitted into the stage.
+   */
+  .book-stage-frame {
+    container-type: size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+  }
+
+  .book-stage-book {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .book-stage-book {
+      width: min(96vw, 100%, 1400px);
+      max-height: 100%;
+      aspect-ratio: 9 / 7;
+      height: auto;
+    }
+
+    @supports (width: 1cqh) {
+      .book-stage-book {
+        width: min(96vw, 100%, 1400px, calc(100cqh * 9 / 7));
+      }
+    }
+  }
+
+  /* Inner page scroll — forms / desktop overflow only */
+  .book-page-scroll {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+}
+
+/* Full-viewport lock while the book experience is mounted (iOS Safari) */
+html.book-experience-active,
+html.book-experience-active body {
+  overflow: hidden;
+  overscroll-behavior: none;
+  height: 100%;
+  max-height: 100dvh;
+}
+
+.book-experience-root {
+  /* Prevent iOS from chaining touch scroll to the document */
+  overscroll-behavior: none;
+  touch-action: manipulation;
 }
 
 /* Ambient floaters — subtle butterflies / leaves / balloons */

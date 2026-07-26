@@ -17,6 +17,7 @@ type Direction = "next" | "prev" | "none";
 /**
  * Full-viewport centered book experience.
  * Cover → large open spread → page turns, with subtle ambient life.
+ * Root is locked to the viewport so iOS Safari does not rubber-band the book.
  */
 export default function BookExperience() {
   const [phase, setPhase] = useState<Phase>("cover");
@@ -24,7 +25,48 @@ export default function BookExperience() {
   const [direction, setDirection] = useState<Direction>("none");
   const [turning, setTurning] = useState(false);
   const [soundUnlock, setSoundUnlock] = useState(0);
-  const touchStartX = useRef<number | null>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  // Lock document scroll for the whole experience (critical on iOS Safari)
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const prev = {
+      htmlOverflow: html.style.overflow,
+      bodyOverflow: body.style.overflow,
+      htmlOverscroll: html.style.overscrollBehavior,
+      bodyOverscroll: body.style.overscrollBehavior,
+      bodyPosition: body.style.position,
+      bodyWidth: body.style.width,
+      bodyTop: body.style.top,
+      bodyHeight: body.style.height,
+      scrollY: window.scrollY,
+    };
+
+    html.classList.add("book-experience-active");
+    html.style.overflow = "hidden";
+    html.style.overscrollBehavior = "none";
+    body.style.overflow = "hidden";
+    body.style.overscrollBehavior = "none";
+    // iOS: fixed body prevents document bounce without breaking inner scroll
+    body.style.position = "fixed";
+    body.style.width = "100%";
+    body.style.top = `-${prev.scrollY}px`;
+    body.style.height = "100%";
+
+    return () => {
+      html.classList.remove("book-experience-active");
+      html.style.overflow = prev.htmlOverflow;
+      html.style.overscrollBehavior = prev.htmlOverscroll;
+      body.style.overflow = prev.bodyOverflow;
+      body.style.overscrollBehavior = prev.bodyOverscroll;
+      body.style.position = prev.bodyPosition;
+      body.style.width = prev.bodyWidth;
+      body.style.top = prev.bodyTop;
+      body.style.height = prev.bodyHeight;
+      window.scrollTo(0, prev.scrollY);
+    };
+  }, []);
 
   const openBook = useCallback(() => {
     // Fire inside the user gesture so the browser allows audio
@@ -108,21 +150,38 @@ export default function BookExperience() {
   }, [phase, next, prev, goTo]);
 
   const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.changedTouches[0]?.clientX ?? null;
+    const t = e.changedTouches[0];
+    if (!t) return;
+    // Ignore swipes that start inside form fields
+    const target = e.target as HTMLElement | null;
+    if (target?.closest("input, textarea, select, button, a, [role='tab']")) {
+      touchStart.current = null;
+      return;
+    }
+    touchStart.current = { x: t.clientX, y: t.clientY };
   };
 
   const onTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current == null) return;
-    const endX = e.changedTouches[0]?.clientX ?? touchStartX.current;
-    const delta = endX - touchStartX.current;
-    touchStartX.current = null;
-    if (Math.abs(delta) < 50) return;
-    if (delta < 0) next();
+    if (touchStart.current == null) return;
+    const t = e.changedTouches[0];
+    if (!t) {
+      touchStart.current = null;
+      return;
+    }
+    const dx = t.clientX - touchStart.current.x;
+    const dy = t.clientY - touchStart.current.y;
+    touchStart.current = null;
+
+    // Require a clearly horizontal swipe so vertical page scroll wins on iOS
+    if (Math.abs(dx) < 56) return;
+    if (Math.abs(dx) < Math.abs(dy) * 1.35) return;
+
+    if (dx < 0) next();
     else prev();
   };
 
   return (
-    <div className="relative min-h-[100dvh] overflow-x-hidden bg-[#f5ead4]">
+    <div className="book-experience-root relative h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#f5ead4]">
       {/* Full-screen animated adventure world (always under the book) */}
       <WorldBackground />
 
@@ -135,7 +194,7 @@ export default function BookExperience() {
 
       {phase === "reading" && (
         <div
-          className="relative z-10 flex min-h-[100dvh] flex-col items-center justify-center px-2 py-2 sm:px-3 sm:py-3"
+          className="relative z-10 flex h-full max-h-[100dvh] flex-col overflow-hidden px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:px-3 sm:pt-3"
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >
@@ -143,9 +202,10 @@ export default function BookExperience() {
             Skip to page content
           </a>
 
+          {/* Book fills remaining height above controls — no document scroll */}
           <div
             id="book-paper"
-            className="flex w-full flex-col items-center"
+            className="flex min-h-0 w-full flex-1 flex-col items-center justify-center"
           >
             <OpenBook
               pageIndex={pageIndex}
@@ -156,7 +216,9 @@ export default function BookExperience() {
               onEdgeNext={next}
               onNextPage={next}
             />
+          </div>
 
+          <div className="w-full shrink-0">
             <BookControls
               pageIndex={pageIndex}
               turning={turning}
@@ -167,7 +229,8 @@ export default function BookExperience() {
           </div>
 
           <div className="sr-only" aria-live="polite" aria-atomic="true">
-            {BOOK_PAGES[pageIndex]?.title}, page {pageIndex + 1} of {TOTAL_PAGES}
+            {BOOK_PAGES[pageIndex]?.title}, page {pageIndex + 1} of{" "}
+            {TOTAL_PAGES}
           </div>
         </div>
       )}
