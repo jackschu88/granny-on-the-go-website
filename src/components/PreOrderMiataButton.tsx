@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
@@ -19,12 +19,14 @@ type Props = {
 };
 
 /**
- * Square Miata preorder control — form target=_blank to Gumroad.
+ * Square Miata preorder control.
+ * Plain <a> only — one product URL per button, no shared form submit.
  */
 export default function PreOrderMiataButton({
   className = "",
   product = PREORDER_PRODUCTS.standard,
 }: Props) {
+  const uid = useId();
   const carRef = useRef<HTMLDivElement>(null);
   const dustRef = useRef<HTMLDivElement>(null);
   const [animating, setAnimating] = useState(false);
@@ -103,36 +105,9 @@ export default function PreOrderMiataButton({
       ? "border-terracotta/60"
       : "border-soft-gold/50";
 
-  return (
-    <div className={`flex w-full flex-col items-center ${className}`}>
-      {ready ? (
-        <form
-          action={checkoutUrl}
-          method="get"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full max-w-[200px]"
-          onSubmit={playDriveOff}
-        >
-          <button
-            type="submit"
-            className={`group relative mx-auto block aspect-square w-full overflow-hidden rounded-2xl border-2 bg-cream shadow-md transition focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2 ${borderClass}`}
-            style={{
-              boxShadow:
-                "0 12px 28px rgba(44,44,44,0.12), 0 4px 10px rgba(0,0,0,0.06)",
-            }}
-            aria-label={`${product.title} ${product.priceLabel} — opens Gumroad`}
-          >
-            <TileFace
-              carRef={carRef}
-              dustRef={dustRef}
-              title={product.title}
-              priceLine={animating ? "Vroom…" : `Gumroad · ${product.priceLabel}`}
-              signed={product.id === "signed"}
-            />
-          </button>
-        </form>
-      ) : (
+  if (!ready) {
+    return (
+      <div className={`flex w-full flex-col items-center ${className}`}>
         <div
           className={`relative mx-auto aspect-square w-full max-w-[200px] overflow-hidden rounded-2xl border-2 border-dashed border-warm-beige bg-cream opacity-90 ${borderClass}`}
           aria-label={`${product.title} — checkout link coming soon`}
@@ -145,22 +120,49 @@ export default function PreOrderMiataButton({
             signed={product.id === "signed"}
           />
         </div>
-      )}
-
-      {ready ? (
-        <a
-          href={checkoutUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-2 font-sans text-xs text-terracotta underline-offset-2 hover:underline"
-        >
-          {product.shortLabel} checkout →
-        </a>
-      ) : (
         <p className="mt-2 font-sans text-[11px] text-charcoal/45">
-          Signed link activates when slug is set
+          Link activates when product is set
         </p>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`flex w-full flex-col items-center ${className}`}
+      data-product={product.id}
+      data-slug={product.slug}
+    >
+      {/* One product only — never opens the other listing */}
+      <a
+        id={`preorder-${product.id}-${uid}`}
+        href={checkoutUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => {
+          e.stopPropagation();
+          playDriveOff();
+          // Do not preventDefault — browser opens only this href
+        }}
+        className={`group relative mx-auto block aspect-square w-full max-w-[200px] overflow-hidden rounded-2xl border-2 bg-cream shadow-md transition focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2 ${borderClass}`}
+        style={{
+          boxShadow:
+            "0 12px 28px rgba(44,44,44,0.12), 0 4px 10px rgba(0,0,0,0.06)",
+        }}
+        aria-label={`${product.title} ${product.priceLabel} — ${checkoutUrl}`}
+      >
+        <TileFace
+          carRef={carRef}
+          dustRef={dustRef}
+          title={product.title}
+          priceLine={animating ? "Vroom…" : `Gumroad · ${product.priceLabel}`}
+          signed={product.id === "signed"}
+        />
+      </a>
+
+      <p className="mt-2 max-w-[11rem] text-center font-sans text-[10px] text-charcoal/40 break-all">
+        {product.shortLabel}: /l/{product.slug}
+      </p>
     </div>
   );
 }
@@ -193,7 +195,7 @@ function TileFace({
       <div ref={carRef} className="absolute inset-0 will-change-transform">
         <Image
           src="/images/miata-preorder.jpg"
-          alt="Granny's little black convertible"
+          alt=""
           fill
           sizes="200px"
           className="pointer-events-none object-cover object-center transition duration-300 group-hover:scale-[1.03] group-hover:brightness-[1.03]"

@@ -68,9 +68,12 @@ export default function ComingSoon({ bookMode = false }: Props) {
           families to welcome Granny into your home.
         </p>
 
-        {/* Standard $15.99 + Signed $20.99 */}
-        <div className="mb-5 flex w-full flex-col items-stretch justify-center gap-5 sm:flex-row sm:items-start sm:gap-4">
-          <div className="flex flex-1 flex-col items-center">
+        {/* Two separate products — each link goes to only its Gumroad slug */}
+        <div className="mb-5 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-5">
+          <div className="flex flex-col items-center rounded-2xl border border-warm-beige/80 bg-warm-white/50 p-3">
+            <p className="mb-1 font-sans text-[10px] uppercase tracking-[0.2em] text-charcoal/40">
+              Standard edition
+            </p>
             <p className="mb-2 font-serif text-lg font-semibold text-deep-burgundy">
               {PREORDER_PRODUCTS.standard.priceLabel}
             </p>
@@ -79,7 +82,10 @@ export default function ComingSoon({ bookMode = false }: Props) {
               {PREORDER_PRODUCTS.standard.description}
             </p>
           </div>
-          <div className="flex flex-1 flex-col items-center">
+          <div className="flex flex-col items-center rounded-2xl border border-terracotta/25 bg-warm-white/50 p-3">
+            <p className="mb-1 font-sans text-[10px] uppercase tracking-[0.2em] text-charcoal/40">
+              Signed edition
+            </p>
             <p className="mb-2 font-serif text-lg font-semibold text-deep-burgundy">
               {PREORDER_PRODUCTS.signed.priceLabel}
             </p>
@@ -89,6 +95,9 @@ export default function ComingSoon({ bookMode = false }: Props) {
             </p>
           </div>
         </div>
+        <p className="mb-5 text-center font-sans text-[11px] text-charcoal/40">
+          Each button opens only that product on Gumroad — they are sold separately.
+        </p>
 
         {amazonUrl && (
           <p className="mb-5">
