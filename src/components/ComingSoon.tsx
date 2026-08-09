@@ -61,7 +61,7 @@ export default function ComingSoon({ bookMode = false }: Props) {
         )}
 
         <p className="mb-2 font-serif text-xl text-charcoal/80 md:text-2xl">
-          Pre-order Granny on the Go
+          Pre-order Granny on the Go Adventures
         </p>
         <p className="mx-auto mb-4 max-w-md font-serif text-sm leading-relaxed text-charcoal/65 md:text-base">
           The first adventure is almost here. Reserve your copy and be among the first
@@ -97,6 +97,7 @@ export default function ComingSoon({ bookMode = false }: Props) {
         </div>
         <p className="mb-5 text-center font-sans text-[11px] text-charcoal/40">
           Each button opens only that product on Gumroad — they are sold separately.
+          {" "}Flat-rate shipping on all hardcopy orders.
         </p>
 
         {amazonUrl && (

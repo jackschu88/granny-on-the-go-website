@@ -5,7 +5,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
             <h3 className="font-serif text-lg text-deep-burgundy mb-3">
-              Granny on the Go
+              Granny on the Go Adventures
             </h3>
             <p className="font-sans text-sm text-charcoal/50 max-w-xs">
               Where ordinary days become extraordinary adventures.

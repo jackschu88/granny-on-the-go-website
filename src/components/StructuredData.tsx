@@ -8,14 +8,14 @@ export default function StructuredData() {
         url: "https://grannyonthegoadventures.com",
         name: "Granny on the Go Adventures",
         description:
-          "The official home of Granny on the Go — a children's book brand about curiosity, courage, and everyday wonder.",
+          "The official home of Granny on the Go Adventures — a children's book brand about curiosity, courage, and everyday wonder.",
         publisher: { "@id": "https://grannyonthegoadventures.com/#author" },
         inLanguage: "en-US",
       },
       {
         "@type": "Book",
         "@id": "https://grannyonthegoadventures.com/#book",
-        name: "Granny on the Go",
+        name: "Granny on the Go Adventures",
         author: { "@id": "https://grannyonthegoadventures.com/#author" },
         description:
           "A story about love, adventure, and the little things that mean the most. Ordinary days become extraordinary when someone truly sees a child.",

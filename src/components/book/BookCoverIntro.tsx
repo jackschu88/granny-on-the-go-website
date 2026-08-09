@@ -160,7 +160,7 @@ export default function BookCoverIntro({ onBegin, onSkip }: Props) {
             {/* Cover fills the 9×7 face — no beige letterbox */}
             <Image
               src="/images/book-cover-landscape.jpg"
-              alt="Granny on the Go book cover"
+              alt="Granny on the Go Adventures book cover"
               fill
               priority
               sizes="(max-width: 768px) 96vw, 1400px"

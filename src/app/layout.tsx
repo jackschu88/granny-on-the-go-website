@@ -16,11 +16,11 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "Granny on the Go | Official Website | Granny on the Go Adventures",
+  title: "Granny on the Go Adventures | Official Website",
   description:
-    "Step into the timeless story of Granny on the Go — where ordinary days become extraordinary adventures. The official home of Granny on the Go Adventures.",
+    "Step into the timeless story of Granny on the Go Adventures — where ordinary days become extraordinary adventures. The official home of Granny on the Go Adventures.",
   keywords: [
-    "Granny on the Go",
+    "Granny on the Go Adventures",
     "children's book",
     "Haley Schumacher",
     "adventure",
@@ -36,9 +36,9 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Granny on the Go | Official Website",
+    title: "Granny on the Go Adventures | Official Website",
     description:
-      "Step into the timeless story of Granny on the Go — where ordinary days become extraordinary adventures.",
+      "Step into the timeless story of Granny on the Go Adventures — where ordinary days become extraordinary adventures.",
     url: "https://grannyonthegoadventures.com",
     siteName: "Granny on the Go Adventures",
     locale: "en_US",
@@ -48,15 +48,15 @@ export const metadata: Metadata = {
         url: "/images/og-image.jpg",
         width: 1200,
         height: 1600,
-        alt: "Granny on the Go book cover",
+        alt: "Granny on the Go Adventures book cover",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Granny on the Go | Official Website",
+    title: "Granny on the Go Adventures | Official Website",
     description:
-      "Step into the timeless story of Granny on the Go — where ordinary days become extraordinary adventures.",
+      "Step into the timeless story of Granny on the Go Adventures — where ordinary days become extraordinary adventures.",
     images: ["/images/og-image.jpg"],
   },
   robots: {

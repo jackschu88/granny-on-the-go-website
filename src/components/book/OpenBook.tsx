@@ -107,7 +107,7 @@ export default function OpenBook({
             <div className="relative flex flex-col justify-between px-8 py-8 lg:px-14 lg:py-12">
               <div>
                 <p className="font-sans text-[10px] uppercase tracking-[0.32em] text-terracotta/75">
-                  Granny on the Go
+                  Granny on the Go Adventures
                 </p>
                 <h2 className="mt-3 font-serif text-3xl leading-tight text-deep-burgundy lg:text-5xl">
                   {page?.title}
@@ -159,7 +159,7 @@ export default function OpenBook({
             <header className="shrink-0 border-b border-warm-beige/70 px-4 pb-2 pt-3">
               <div className="flex items-baseline justify-between gap-2">
                 <p className="font-sans text-[9px] uppercase tracking-[0.28em] text-terracotta/80">
-                  Granny on the Go
+                  Granny on the Go Adventures
                 </p>
                 <p className="shrink-0 font-sans text-[10px] text-charcoal/35">
                   {pageIndex + 1}/{BOOK_PAGES.length}

@@ -33,7 +33,7 @@ export const PREORDER_PRODUCTS: Record<"standard" | "signed", PreorderProduct> =
     standard: {
       id: "standard",
       slug: STANDARD_SLUG,
-      priceLabel: "$15.99",
+      priceLabel: "$14.99",
       title: "Preorder the Adventure",
       shortLabel: "Standard",
       description: "Book pre-order · Keepsake PDF",
@@ -41,10 +41,10 @@ export const PREORDER_PRODUCTS: Record<"standard" | "signed", PreorderProduct> =
     signed: {
       id: "signed",
       slug: SIGNED_SLUG,
-      priceLabel: "$20.99",
-      title: "Signed Copy",
+      priceLabel: "$27.99",
+      title: "Signed Hardcopy",
       shortLabel: "Signed",
-      description: "Author-signed copy · Limited",
+      description: "Author-signed hardcopy · Limited",
     },
   };
 

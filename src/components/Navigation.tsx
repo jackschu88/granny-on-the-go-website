@@ -39,7 +39,7 @@ export default function Navigation() {
             href="#hero"
             className="font-serif text-lg md:text-xl text-deep-burgundy font-bold hover:text-terracotta transition-colors"
           >
-            Granny on the Go
+            Granny on the Go Adventures
           </a>
 
           <div className="hidden md:flex items-center gap-6">

@@ -9,7 +9,7 @@ const resend = process.env.RESEND_API_KEY
 
 const fromAddress =
   process.env.RESEND_FROM_EMAIL ??
-  "Granny on the Go <contact@grannyonthegoadventures.com>";
+  "Granny on the Go Adventures <contact@grannyonthegoadventures.com>";
 
 const toAddress =
   process.env.CONTACT_TO_EMAIL ?? "GrannyOnTheGoBooks@gmail.com";
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       from: fromAddress,
       to: toAddress,
       replyTo: email,
-      subject: `[Granny on the Go] ${subject}`,
+      subject: `[Granny on the Go Adventures] ${subject}`,
       html: `
         <h2>New Contact Form Message</h2>
         <p><strong>Name:</strong> ${safeName}</p>

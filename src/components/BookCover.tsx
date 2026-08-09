@@ -201,7 +201,7 @@ export default function BookCover({ onComplete }: BookCoverProps) {
             />
             <Image
               src="/images/book-cover.jpg"
-              alt="Granny on the Go book cover — Granny arriving with her adventure tote as children run to greet her"
+              alt="Granny on the Go Adventures book cover — Granny arriving with her adventure tote as children run to greet her"
               fill
               priority
               sizes="(max-width: 768px) 92vw, 560px"

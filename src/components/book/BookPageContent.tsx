@@ -33,7 +33,7 @@ export default function BookPageContent({ pageId, onNext }: Props) {
             Welcome to Granny on the Go Adventures.
           </p>
           <p className="mb-2 max-w-sm font-serif text-[13px] leading-snug text-charcoal/70 md:mb-3 md:text-base md:leading-relaxed">
-            This is the official home of Granny on the Go—a place where imagination
+            This is the official home of Granny on the Go Adventures—a place where imagination
             is encouraged, kindness is celebrated, and the smallest moments often
             become the greatest adventures.
           </p>
@@ -240,7 +240,7 @@ export default function BookPageContent({ pageId, onNext }: Props) {
             Mother. Storyteller. Believer in childhood.
           </p>
           <p className="mb-1.5 font-serif text-[13px] leading-snug text-charcoal/80 md:mb-2 md:text-base md:leading-relaxed">
-            Granny on the Go began as a simple dream—to capture the kind of childhood
+            Granny on the Go Adventures began as a simple dream—to capture the kind of childhood
             memories that stay with us forever.
           </p>
           <p className="mb-1.5 font-serif text-[13px] leading-snug text-charcoal/80 md:mb-2 md:text-base md:leading-relaxed">

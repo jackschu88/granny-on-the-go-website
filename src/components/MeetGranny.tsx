@@ -30,7 +30,7 @@ export default function MeetGranny() {
             <div className="relative h-52 w-52 flex-shrink-0 overflow-hidden rounded-full border-2 border-soft-gold/40 shadow-md md:h-60 md:w-60">
               <Image
                 src="/images/book-cover.jpg"
-                alt="Granny on the Go — smiling, red adventure cap, colorful tote, little black convertible"
+                alt="Granny on the Go Adventures — smiling, red adventure cap, colorful tote, little black convertible"
                 fill
                 sizes="240px"
                 className="object-cover object-[42%_28%]"

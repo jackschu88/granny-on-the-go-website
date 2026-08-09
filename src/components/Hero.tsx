@@ -59,7 +59,7 @@ export default function Hero() {
         <h1 className="mb-6 font-serif text-5xl leading-tight text-deep-burgundy md:text-7xl lg:text-8xl">
           Granny
           <span className="mt-2 block text-3xl text-terracotta md:text-5xl lg:text-6xl">
-            on the Go
+            on the Go Adventures
           </span>
         </h1>
 

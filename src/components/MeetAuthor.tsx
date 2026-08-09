@@ -40,7 +40,7 @@ export default function MeetAuthor() {
                 Haley Schumacher is a mother of four living in the Las Vegas area.
               </p>
               <p className="mb-4 font-serif text-lg leading-relaxed text-charcoal/80">
-                Granny on the Go grew from the adventures her children experienced with the
+                Granny on the Go Adventures grew from the adventures her children experienced with the
                 real-life inspiration for Granny.
               </p>
               <p className="font-serif text-lg leading-relaxed text-charcoal/80">
