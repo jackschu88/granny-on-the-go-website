@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { Fraunces, Source_Sans_3 } from "next/font/google";
 import StructuredData from "@/components/StructuredData";
 import "./globals.css";
@@ -78,6 +79,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         {children}
+        <Analytics />
       </body>
     </html>
   );
