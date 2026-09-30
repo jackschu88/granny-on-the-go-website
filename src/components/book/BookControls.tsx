@@ -1,6 +1,7 @@
 "use client";
 
 import { BOOK_PAGES } from "@/lib/book-pages";
+import { SoundToggle } from "@/components/book/AmbientSound";
 
 type Props = {
   pageIndex: number;
@@ -21,13 +22,13 @@ export default function BookControls({
   const isLast = pageIndex >= BOOK_PAGES.length - 1;
 
   return (
-    <div className="mt-1 flex w-full flex-col items-center gap-1 px-1 sm:mt-2 sm:gap-2 sm:px-2">
+    <div className="mt-1 flex w-full flex-col items-center gap-2 px-1 sm:mt-2 sm:gap-2 sm:px-2">
       <div className="flex items-center justify-center gap-2 sm:gap-3">
         <button
           type="button"
           onClick={onPrev}
           disabled={turning}
-          className="rounded-full border border-warm-beige bg-warm-white/95 px-3 py-1.5 font-sans text-xs text-deep-burgundy shadow-sm transition hover:bg-warm-beige/40 disabled:cursor-wait disabled:opacity-60 sm:px-4 sm:py-2 sm:text-sm"
+          className="min-h-11 rounded-full border border-warm-beige bg-warm-white/95 px-3 py-1.5 font-sans text-xs text-deep-burgundy shadow-sm transition hover:bg-warm-beige/40 disabled:cursor-default disabled:opacity-60 sm:px-4 sm:py-2 sm:text-sm"
           aria-label={isFirst ? "Close book and return to cover" : "Previous page"}
         >
           {isFirst ? "← Cover" : "← Previous"}
@@ -37,15 +38,17 @@ export default function BookControls({
           type="button"
           onClick={onNext}
           disabled={isLast || turning}
-          className="btn-primary px-4 py-1.5 text-xs disabled:cursor-not-allowed disabled:opacity-35 sm:px-5 sm:py-2 sm:text-sm"
+          className="btn-primary min-h-11 px-4 py-1.5 text-xs disabled:cursor-not-allowed disabled:opacity-35 sm:px-5 sm:py-2 sm:text-sm"
           aria-label={isLast ? "End of book" : "Next page"}
         >
           {isLast ? "The End" : "Turn the Page →"}
         </button>
+
+        <SoundToggle className="min-h-11 rounded-full border border-warm-beige bg-warm-white/95 px-3 py-1.5 font-sans text-xs text-deep-burgundy shadow-sm transition hover:bg-warm-beige/40" />
       </div>
 
       <div
-        className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5"
+        className="flex flex-wrap items-center justify-center gap-0"
         role="tablist"
         aria-label="Pages"
       >
@@ -58,16 +61,20 @@ export default function BookControls({
             aria-label={`Go to ${p.title}`}
             disabled={turning}
             onClick={() => onGoTo(i)}
-            className={`h-1.5 rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta disabled:cursor-wait sm:h-2 ${
-              i === pageIndex
-                ? "w-4 bg-terracotta sm:w-5"
-                : "w-1.5 bg-charcoal/20 hover:bg-charcoal/40 sm:w-2"
-            }`}
-          />
+            className="relative -mx-[5px] flex h-6 w-6 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta disabled:cursor-default"
+          >
+            <span
+              className={`pointer-events-none block rounded-full transition-all ${
+                i === pageIndex
+                  ? "h-1.5 w-4 bg-terracotta sm:h-2 sm:w-5"
+                  : "h-1.5 w-1.5 bg-charcoal/30 sm:h-2 sm:w-2"
+              }`}
+            />
+          </button>
         ))}
       </div>
 
-      <p className="hidden text-center font-sans text-[11px] text-charcoal/35 sm:block">
+      <p className="hidden text-center font-sans text-[11px] text-charcoal/55 sm:block">
         ← → keys · swipe · click page edges
       </p>
     </div>

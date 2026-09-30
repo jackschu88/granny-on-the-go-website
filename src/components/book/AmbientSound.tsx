@@ -1,6 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 
 const TRACK_SRC = "/audio/golden-evening-light.mp3";
 const VOLUME = 0.32;
@@ -8,18 +16,54 @@ const VOLUME = 0.32;
 /** Dispatched from Begin the Adventure (user gesture) so browsers allow audio. */
 export const START_MUSIC_EVENT = "granny-start-music";
 
+type SoundState = {
+  started: boolean;
+  playing: boolean;
+  toggle: () => void;
+};
+
+const SoundContext = createContext<SoundState | null>(null);
+
+/** Pause / resume. Renders nothing until the visitor has started the music. */
+export function SoundToggle({ className = "" }: { className?: string }) {
+  const sound = useContext(SoundContext);
+  if (!sound?.started) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={sound.toggle}
+      aria-pressed={sound.playing}
+      aria-label={sound.playing ? "Pause music" : "Play music"}
+      className={className}
+    >
+      {sound.playing ? "Sound on" : "Sound off"}
+    </button>
+  );
+}
+
 /**
  * Golden Evening Light — hidden player.
  * Starts when Begin the Adventure (or Skip) fires START_MUSIC_EVENT / unlockToken.
  * Pauses when the tab/app is backgrounded or the page is closing so music
  * does not keep playing after a normal (non-force) close.
- * No on-screen play button.
+ * The file stays unloaded until Begin, so the cover does not download the track.
  */
-export default function AmbientSound({ unlockToken }: { unlockToken: number }) {
+export default function AmbientSound({
+  unlockToken,
+  children,
+}: {
+  unlockToken: number;
+  children?: ReactNode;
+}) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const startedRef = useRef(false);
+  /** Visitor chose Sound off — do not resume over that choice. */
+  const userPausedRef = useRef(false);
   /** True only when we intentionally paused for background — resume on return. */
   const pausedForBackgroundRef = useRef(false);
+  const [started, setStarted] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   const pauseHard = useCallback(() => {
     const el = audioRef.current;
@@ -34,10 +78,18 @@ export default function AmbientSound({ unlockToken }: { unlockToken: number }) {
     }
   }, []);
 
+  const attachSource = useCallback(() => {
+    const el = audioRef.current;
+    if (!el || el.getAttribute("src")) return;
+    el.preload = "auto";
+    el.src = TRACK_SRC;
+  }, []);
+
   const play = useCallback(async () => {
     const el = audioRef.current;
-    if (!el) return;
+    if (!el || userPausedRef.current) return;
     try {
+      attachSource();
       el.volume = VOLUME;
       el.loop = true;
       if (el.paused || el.ended) {
@@ -45,6 +97,8 @@ export default function AmbientSound({ unlockToken }: { unlockToken: number }) {
       }
       startedRef.current = true;
       pausedForBackgroundRef.current = false;
+      setStarted(true);
+      setPlaying(true);
       try {
         if ("mediaSession" in navigator) {
           navigator.mediaSession.playbackState = "playing";
@@ -55,22 +109,29 @@ export default function AmbientSound({ unlockToken }: { unlockToken: number }) {
     } catch {
       // Gesture may have been lost; unlockToken retry or another Begin click can retry
       startedRef.current = false;
+      setPlaying(false);
     }
-  }, []);
+  }, [attachSource]);
 
-  // Preload only — do not autoplay until Begin
-  useEffect(() => {
+  const toggle = useCallback(() => {
     const el = audioRef.current;
     if (!el) return;
-    el.loop = true;
-    el.volume = VOLUME;
-    el.preload = "auto";
-    el.load();
-  }, []);
+    if (!el.paused && !el.ended) {
+      userPausedRef.current = true;
+      pausedForBackgroundRef.current = false;
+      pauseHard();
+      setPlaying(false);
+      return;
+    }
+    userPausedRef.current = false;
+    void play();
+  }, [pauseHard, play]);
 
   // Sync listener: runs inside the click stack when Begin dispatches the event
   useEffect(() => {
     const onStart = () => {
+      userPausedRef.current = false;
+      setStarted(true);
       void play();
     };
     window.addEventListener(START_MUSIC_EVENT, onStart);
@@ -93,6 +154,7 @@ export default function AmbientSound({ unlockToken }: { unlockToken: number }) {
         if (el && !el.paused) {
           pausedForBackgroundRef.current = true;
           pauseHard();
+          setPlaying(false);
         }
       } else if (pausedForBackgroundRef.current && startedRef.current) {
         void play();
@@ -138,14 +200,16 @@ export default function AmbientSound({ unlockToken }: { unlockToken: number }) {
   }, []);
 
   return (
-    <audio
-      ref={audioRef}
-      src={TRACK_SRC}
-      loop
-      playsInline
-      preload="auto"
-      className="hidden"
-      aria-hidden
-    />
+    <SoundContext.Provider value={{ started, playing, toggle }}>
+      {children}
+      <audio
+        ref={audioRef}
+        loop
+        playsInline
+        preload="none"
+        className="hidden"
+        aria-hidden
+      />
+    </SoundContext.Provider>
   );
 }

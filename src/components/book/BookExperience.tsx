@@ -99,7 +99,7 @@ export default function BookExperience() {
       window.setTimeout(() => {
         setTurning(false);
         setDirection("none");
-      }, 500);
+      }, 380);
     },
     [pageIndex, turning]
   );
@@ -181,7 +181,12 @@ export default function BookExperience() {
   };
 
   return (
-    <div className="book-experience-root relative h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#f5ead4]">
+    <AmbientSound unlockToken={soundUnlock}>
+    <div
+      id="main-content"
+      tabIndex={-1}
+      className="book-experience-root relative h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#f5ead4] outline-none"
+    >
       {/* Full-screen animated adventure world (always under the book) */}
       <WorldBackground />
 
@@ -235,7 +240,7 @@ export default function BookExperience() {
         </div>
       )}
 
-      <AmbientSound unlockToken={soundUnlock} />
     </div>
+    </AmbientSound>
   );
 }

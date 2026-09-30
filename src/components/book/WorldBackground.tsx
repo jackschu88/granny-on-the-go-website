@@ -84,10 +84,8 @@ export default function WorldBackground() {
           src="/images/world-bg.jpg"
           alt=""
           fill
-          priority
           sizes="100vw"
           className="object-cover object-center"
-          quality={85}
         />
       </div>
 

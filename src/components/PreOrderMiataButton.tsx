@@ -160,9 +160,6 @@ export default function PreOrderMiataButton({
         />
       </a>
 
-      <p className="mt-2 max-w-[11rem] text-center font-sans text-[10px] text-charcoal/40 break-all">
-        {product.shortLabel}: /l/{product.slug}
-      </p>
     </div>
   );
 }

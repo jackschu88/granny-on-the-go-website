@@ -63,7 +63,7 @@ export default function OpenBook({
     tl.fromTo(
       spread,
       { autoAlpha: 0.8, x: fromX, scale: 0.992 },
-      { autoAlpha: 1, x: 0, scale: 1, duration: 0.42, ease: "power2.out" }
+      { autoAlpha: 1, x: 0, scale: 1, duration: 0.3, ease: "power2.out" }
     );
 
     return () => {
@@ -76,13 +76,13 @@ export default function OpenBook({
       <div className="book-stage-book relative mx-auto">
         <button
           type="button"
-          className="absolute left-0 top-0 z-30 hidden h-full w-[8%] cursor-w-resize bg-transparent md:block"
+          className="absolute left-0 top-0 z-30 hidden h-full w-6 cursor-w-resize bg-transparent md:block"
           aria-label="Previous page"
           onClick={onEdgePrev}
         />
         <button
           type="button"
-          className="absolute right-0 top-0 z-30 hidden h-full w-[8%] cursor-e-resize bg-transparent md:block"
+          className="absolute right-0 top-0 z-30 hidden h-full w-6 cursor-e-resize bg-transparent md:block"
           aria-label="Next page"
           onClick={onEdgeNext}
         />

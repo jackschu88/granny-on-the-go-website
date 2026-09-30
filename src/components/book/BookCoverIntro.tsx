@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
+import { SoundToggle } from "@/components/book/AmbientSound";
 
 type Props = {
   onBegin: () => void;
@@ -113,10 +114,12 @@ export default function BookCoverIntro({ onBegin, onSkip }: Props) {
     >
       {/* World art lives under this layer (BookExperience → WorldBackground) */}
 
+      <SoundToggle className="absolute top-3 left-3 z-30 min-h-11 rounded-full border border-warm-beige bg-warm-white/95 px-4 py-2 font-sans text-sm text-charcoal/70 shadow-sm md:top-5 md:left-5" />
+
       <button
         type="button"
         onClick={() => playOpen(true)}
-        className="absolute top-3 right-3 z-30 rounded-full border border-warm-beige bg-warm-white/95 px-4 py-2 font-sans text-sm text-charcoal/70 shadow-sm md:top-5 md:right-5"
+        className="absolute top-3 right-3 z-30 min-h-11 rounded-full border border-warm-beige bg-warm-white/95 px-4 py-2 font-sans text-sm text-charcoal/70 shadow-sm md:top-5 md:right-5"
       >
         Skip Intro
       </button>
