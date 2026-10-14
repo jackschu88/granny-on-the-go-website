@@ -1,3 +1,5 @@
+import { FAQ } from "@/components/AboutBook";
+
 export default function StructuredData() {
   const data = {
     "@context": "https://schema.org",
@@ -19,7 +21,9 @@ export default function StructuredData() {
         author: { "@id": "https://grannyonthegoadventures.com/#author" },
         description:
           "A story about love, adventure, and the little things that mean the most. Ordinary days become extraordinary when someone truly sees a child.",
-        genre: "Children's literature",
+        genre: ["Children's literature", "Picture book"],
+        typicalAgeRange: "3-8",
+        audience: { "@type": "PeopleAudience", suggestedMinAge: 3, suggestedMaxAge: 8 },
         inLanguage: "en",
         bookFormat: "https://schema.org/Hardcover",
         image: "https://grannyonthegoadventures.com/images/book-cover.jpg",
@@ -37,6 +41,16 @@ export default function StructuredData() {
       },
     ],
   };
+
+  data["@graph"].push({
+    "@type": "FAQPage",
+    "@id": "https://grannyonthegoadventures.com/#faq",
+    mainEntity: FAQ.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  } as never);
 
   return (
     <script

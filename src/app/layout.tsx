@@ -17,9 +17,9 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "Granny on the Go Adventures | Official Website",
+  title: "Granny on the Go Adventures | A Grandma Picture Book by Haley Schumacher",
   description:
-    "Step into the timeless story of Granny on the Go Adventures — where ordinary days become extraordinary adventures. The official home of Granny on the Go Adventures.",
+    "A full-color picture book for ages 3–8 by Haley Schumacher: Granny on the Go turns ordinary days into adventures and shows a child she is truly seen.",
   keywords: [
     "Granny on the Go Adventures",
     "children's book",
@@ -32,14 +32,14 @@ export const metadata: Metadata = {
   authors: [{ name: "Haley Schumacher" }],
   creator: "Haley Schumacher",
   publisher: "Granny on the Go Adventures",
-  metadataBase: new URL("https://grannyonthegoadventures.com"),
+  metadataBase: new URL("https://www.grannyonthegoadventures.com"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Granny on the Go Adventures | Official Website",
+    title: "Granny on the Go Adventures | A Grandma Picture Book by Haley Schumacher",
     description:
-      "Step into the timeless story of Granny on the Go Adventures — where ordinary days become extraordinary adventures.",
+      "A full-color picture book for ages 3–8 by Haley Schumacher: Granny on the Go turns ordinary days into adventures and shows a child she is truly seen.",
     url: "https://grannyonthegoadventures.com",
     siteName: "Granny on the Go Adventures",
     locale: "en_US",
@@ -55,9 +55,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Granny on the Go Adventures | Official Website",
+    title: "Granny on the Go Adventures | A Grandma Picture Book by Haley Schumacher",
     description:
-      "Step into the timeless story of Granny on the Go Adventures — where ordinary days become extraordinary adventures.",
+      "A full-color picture book for ages 3–8 by Haley Schumacher: Granny on the Go turns ordinary days into adventures and shows a child she is truly seen.",
     images: ["/images/og-image.jpg"],
   },
   robots: {
